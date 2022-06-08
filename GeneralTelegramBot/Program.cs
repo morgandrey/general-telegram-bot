@@ -1,10 +1,10 @@
-﻿using ImgTelegramBot.Commands;
+﻿using GeneralTelegramBot.Commands;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 
-namespace ImgTelegramBot
+namespace GeneralTelegramBot
 {
     public class Program
     {

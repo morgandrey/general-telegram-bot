@@ -3,7 +3,7 @@ using Telegram.Bot.Types;
 using YandexDisk.Client.Clients;
 using YandexDisk.Client.Http;
 
-namespace ImgTelegramBot.Commands
+namespace GeneralTelegramBot.Commands
 {
     public static class SaveImageCommand
     {

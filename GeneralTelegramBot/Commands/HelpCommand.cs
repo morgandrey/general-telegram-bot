@@ -1,7 +1,7 @@
 ﻿using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace ImgTelegramBot.Commands;
+namespace GeneralTelegramBot.Commands;
 
 public static class HelpCommand
 {

@@ -1,4 +1,4 @@
-﻿namespace ImgTelegramBot;
+﻿namespace GeneralTelegramBot;
 
 public static class Constants
 {
