@@ -4,112 +4,118 @@ using Telegram.Bot.Exceptions;
 using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 
-namespace GeneralTelegramBot
+namespace GeneralTelegramBot;
+
+public static class Program
 {
-    public class Program
+    private static readonly ITelegramBotClient bot = new TelegramBotClient(Constants.TelegramToken);
+    private static bool IsMultiplePhotos;
+
+    private static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
     {
-        private static readonly ITelegramBotClient bot = new TelegramBotClient(Constants.TelegramToken);
-        private static bool IsMultiplePhotos;
+        var message = update.Message;
 
-        private static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
+        if (message == null)
         {
-            var message = update.Message;
+            return;
+        }
 
-            if (message == null)
+        if (IsReplyMessageUpdate(message))
+        {
+            if (message.Text.Contains("/save"))
             {
-                return;
-            }
-
-            if (IsReplyMessageUpdate(message))
-            {
-                if (message.Text.Contains("/save"))
+                if (message.ReplyToMessage.Photo != null)
                 {
                     await SaveImageCommand.Execute(botClient, message, message.ReplyToMessage.Photo[^1].FileId);
                 }
-            }
-            else if (message.Text != null)
-            {
-                IsMultiplePhotos = false;
-                await HandleTextCommand(botClient, message);
-            }
-            else if (IsMessageUpdate(message))
-            {
-                if (IsMultiplePhotos)
+                else
                 {
-                    message.Caption = "/save";
-                }
-
-                if (message.Caption.Contains("/save"))
-                {
-                    IsMultiplePhotos = true;
-                    await SaveImageCommand.Execute(botClient, message, message.Photo[^1].FileId);
+                    await SaveMessageCommand.Execute(botClient, message);
                 }
             }
         }
-
-        private static async Task HandleTextCommand(ITelegramBotClient botClient, Message message)
+        else if (message.Text != null)
         {
-            switch (message.Text.ToLower())
+            IsMultiplePhotos = false;
+            await HandleTextCommand(botClient, message);
+        }
+        else if (IsMessageUpdate(message))
+        {
+            if (IsMultiplePhotos)
             {
-                case "/healthcheck":
-                    await HealthCheckCommand.Execute(botClient, message);
-                    break;
-                case "/help":
-                    await HelpCommand.Execute(botClient, message);
-                    break;
-                case "/random":
-                    await RandomCommand.Execute(botClient, message);
-                    break;
-                case "/anek":
-                    await AnecdoteCommand.Execute(botClient, message);
-                    break;
+                message.Caption = "/save";
+            }
+
+            if (message.Caption.Contains("/save"))
+            {
+                IsMultiplePhotos = true;
+                await SaveImageCommand.Execute(botClient, message, message.Photo[^1].FileId);
             }
         }
+    }
 
-        private static bool IsMessageUpdate(Message message)
+    private static async Task HandleTextCommand(ITelegramBotClient botClient, Message message)
+    {
+        switch (message.Text.ToLower())
         {
-            return message.Photo != null &&
-                   message.Caption != null;
+            case "/healthcheck":
+                await HealthCheckCommand.Execute(botClient, message);
+                break;
+            case "/help":
+                await HelpCommand.Execute(botClient, message);
+                break;
+            case "/random":
+                await RandomCommand.Execute(botClient, message);
+                break;
+            case "/anek":
+                await AnecdoteCommand.Execute(botClient, message);
+                break;
         }
+    }
 
-        private static bool IsReplyMessageUpdate(Message message)
+    private static bool IsMessageUpdate(Message message)
+    {
+        return message.Photo != null &&
+               message.Caption != null;
+    }
+
+    private static bool IsReplyMessageUpdate(Message message)
+    {
+        return message.ReplyToMessage != null &&
+               message.Text != null;
+    }
+
+    private static Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
+    {
+        var ErrorMessage = exception switch
         {
-            return message.ReplyToMessage?.Photo != null &&
-                   message.Text != null;
-        }
+            ApiRequestException apiRequestException
+                => $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
+            _ => exception.ToString()
+        };
 
-        private static Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
+        Console.WriteLine(ErrorMessage);
+        return Task.CompletedTask;
+    }
+
+    private static void Main(string[] args)
+    {
+        Console.WriteLine($"The bot {bot.GetMeAsync().Result.Username} is ready.");
+
+        using var cts = new CancellationTokenSource();
+        var receiverOptions = new ReceiverOptions
         {
-            var ErrorMessage = exception switch
-            {
-                ApiRequestException apiRequestException
-                    => $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
-                _ => exception.ToString()
-            };
+            AllowedUpdates = { },
+        };
 
-            Console.WriteLine(ErrorMessage);
-            return Task.CompletedTask;
-        }
+        bot.StartReceiving(
+            HandleUpdateAsync,
+            HandleErrorAsync,
+            receiverOptions,
+            cts.Token
+        );
 
-        private static void Main(string[] args)
-        {
-            Console.WriteLine($"The bot {bot.GetMeAsync().Result.Username} is ready.");
-
-            using var cts = new CancellationTokenSource();
-            var receiverOptions = new ReceiverOptions
-            {
-                AllowedUpdates = { },
-            };
-
-            bot.StartReceiving(
-                HandleUpdateAsync,
-                HandleErrorAsync,
-                receiverOptions,
-                cts.Token
-            );
-
-            Console.ReadLine();
-            cts.Cancel();
-        }
+        Console.ReadLine();
+        cts.Cancel();
     }
 }
