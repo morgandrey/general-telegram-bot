@@ -36,8 +36,7 @@ public class SaveMessageCommand
             MessageUserId = messageUserId.UserId,
             SaveUserId = saveUserId.Result.UserId
         };
-        await dbContext.AddAsync(message);
-        await dbContext.SaveChangesAsync();
+        dbRepository.SaveTelegramMessage(message);
         await botClient.SendTextMessageAsync(chatId, "Message saved successfully!");
     }
 }

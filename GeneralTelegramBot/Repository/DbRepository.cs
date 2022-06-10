@@ -33,6 +33,12 @@ public class DbRepository
 
     }
 
+    public async void SaveTelegramMessage(Message message)
+    {
+        await dbContext.AddAsync(message);
+        await dbContext.SaveChangesAsync();
+    }
+
     public async Task<User> FindUserByUsername(string userName)
     {
         var user = await dbContext.Users.FirstOrDefaultAsync(x => x.UserLogin == userName);
