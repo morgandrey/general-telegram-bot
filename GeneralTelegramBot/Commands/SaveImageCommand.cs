@@ -1,12 +1,10 @@
 using GeneralTelegramBot.Models;
 using GeneralTelegramBot.Repository;
-using Microsoft.EntityFrameworkCore;
 using Telegram.Bot;
 using YandexDisk.Client.Clients;
 using YandexDisk.Client.Http;
 using TelegramMessage = Telegram.Bot.Types.Message;
 using SystemFile = System.IO.File;
-using User = GeneralTelegramBot.Models.User;
 
 namespace GeneralTelegramBot.Commands;
 
@@ -18,10 +16,6 @@ public class SaveImageCommand
     {
         await new DiskHttpApi(Constants.YandexDiskToken).Files.UploadFileAsync(diskPath, false, localPath, CancellationToken.None);
     }
-
-    private static async Task DownloadToYandexDisk(string DiskPath, string LocalPath) =>
-        await new DiskHttpApi(Constants.YandexDiskToken).Files.DownloadFileAsync(DiskPath, LocalPath);
-
 
     public static async Task Execute(ITelegramBotClient botClient, TelegramMessage message, string image)
     {
@@ -55,7 +49,12 @@ public class SaveImageCommand
     {
         await using var dbContext = new GeneralTelegramBotDbContext();
         var dbRepository = new DbRepository(dbContext);
-        var user = dbRepository.FindUserByUsername(message.From.Username).Result ?? dbRepository.CreateUser(message).Result;
+
+        var userFirstName = message.From.FirstName;
+        var userLastName = message.From.LastName;
+        var userName = message.From.Username;
+
+        var user = dbRepository.CreateUser(userFirstName, userLastName, userName).Result;
         var byteArray = await SystemFile.ReadAllBytesAsync(pathToFile);
         var photo = new Photo
         {

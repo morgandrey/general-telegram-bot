@@ -22,13 +22,13 @@ public static class Program
 
         if (IsReplyMessageUpdate(message))
         {
-            if (message.Text.Contains("/save"))
+            if (message.Text!.Contains("/save"))
             {
-                if (message.ReplyToMessage.Photo != null)
+                if (message.ReplyToMessage!.Photo != null)
                 {
                     await SaveImageCommand.Execute(botClient, message, message.ReplyToMessage.Photo[^1].FileId);
                 }
-                else
+                else if (message.ReplyToMessage.Text != null)
                 {
                     await SaveMessageCommand.Execute(botClient, message);
                 }
@@ -46,7 +46,7 @@ public static class Program
                 message.Caption = "/save";
             }
 
-            if (message.Caption.Contains("/save"))
+            if (message.Caption!.Contains("/save"))
             {
                 IsMultiplePhotos = true;
                 await SaveImageCommand.Execute(botClient, message, message.Photo[^1].FileId);
@@ -56,7 +56,7 @@ public static class Program
 
     private static async Task HandleTextCommand(ITelegramBotClient botClient, Message message)
     {
-        switch (message.Text.ToLower())
+        switch (message.Text!.ToLower())
         {
             case "/healthcheck":
                 await HealthCheckCommand.Execute(botClient, message);

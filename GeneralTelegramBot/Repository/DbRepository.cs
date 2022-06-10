@@ -1,6 +1,5 @@
 ﻿using GeneralTelegramBot.Models;
 using Microsoft.EntityFrameworkCore;
-using TelegramMessage = Telegram.Bot.Types.Message;
 
 namespace GeneralTelegramBot.Repository;
 
@@ -13,23 +12,30 @@ public class DbRepository
         this.dbContext = dbContext;
     }
 
-    public async Task<User> CreateUser(TelegramMessage message)
+    public async Task<User> CreateUser(string firstName, string lastName, string userName)
     {
+        var userAlreadyExists = FindUserByUsername(userName).Result;
+        if (userAlreadyExists != null)
+        {
+            return userAlreadyExists;
+        }
+
         var user = new User
         {
-            UserName = message.From.FirstName,
-            UserSurname = message.From.LastName,
-            UserLogin = message.From.Username
+            UserName = firstName,
+            UserSurname = lastName,
+            UserLogin = userName
         };
 
         await dbContext.AddAsync(user);
         await dbContext.SaveChangesAsync();
         return user;
+
     }
 
-    public async Task<User> FindUserByUsername(string username)
+    public async Task<User> FindUserByUsername(string userName)
     {
-        var user = await dbContext.Users.FirstOrDefaultAsync(x => x.UserLogin == username);
+        var user = await dbContext.Users.FirstOrDefaultAsync(x => x.UserLogin == userName);
         return user;
     }
 }

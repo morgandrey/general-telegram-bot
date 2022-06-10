@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GeneralTelegramBot.Models;
-
-public partial class Message
+namespace GeneralTelegramBot.Models
 {
-    public int MessageId { get; set; }
-    public string MessageContent { get; set; } = null!;
-    public DateTime MessageCreationDate { get; set; }
-    public int UserId { get; set; }
+    public partial class Message
+    {
+        public int MessageId { get; set; }
+        public string MessageContent { get; set; } = null!;
+        public DateTime MessageCreationDate { get; set; }
+        public int MessageUserId { get; set; }
+        public int SaveUserId { get; set; }
 
-    public virtual User User { get; set; } = null!;
+        public virtual User MessageUser { get; set; } = null!;
+    }
 }
