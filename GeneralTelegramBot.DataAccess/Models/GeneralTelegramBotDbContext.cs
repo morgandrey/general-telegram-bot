@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace GeneralTelegramBot.Models
+namespace GeneralTelegramBot.DataAccess.Models
 {
     public partial class GeneralTelegramBotDbContext : DbContext
     {

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace GeneralTelegramBot.Models
+﻿namespace GeneralTelegramBot.DataAccess.Models
 {
     public partial class Photo
     {

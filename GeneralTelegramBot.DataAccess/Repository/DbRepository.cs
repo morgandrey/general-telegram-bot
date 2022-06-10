@@ -1,7 +1,7 @@
-﻿using GeneralTelegramBot.Models;
+﻿using GeneralTelegramBot.DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace GeneralTelegramBot.Repository;
+namespace GeneralTelegramBot.DataAccess.Repository;
 
 public class DbRepository
 {

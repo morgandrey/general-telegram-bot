@@ -1,5 +1,5 @@
-﻿using GeneralTelegramBot.Models;
-using GeneralTelegramBot.Repository;
+﻿using GeneralTelegramBot.DataAccess.Models;
+using GeneralTelegramBot.DataAccess.Repository;
 using Telegram.Bot;
 using TelegramMessage = Telegram.Bot.Types.Message;
 
