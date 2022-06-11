@@ -10,6 +10,7 @@ namespace GeneralTelegramBot.Commands;
 
 public class SaveImageCommand
 {
+    private static readonly UnitOfWork unitOfWork = new UnitOfWork();
     private const string YandexDiskUrl = "https://disk.yandex.ru/d/QUVXM648JvB5cQ";
 
     private static async Task UploadToYandexDisk(string diskPath, string localPath)
@@ -27,7 +28,7 @@ public class SaveImageCommand
             await botClient.GetInfoAndDownloadFileAsync(image, outputFileStream);
             await outputFileStream.DisposeAsync();
 
-            await SaveImageToDb(message, tempFilePath);
+            await SavePhotoToDb(message, tempFilePath);
             await UploadToYandexDisk($"disk:/Фотки/{DateTime.Now:MM-dd-yyyy;hh-mm-sstt}", tempFilePath);
             SystemFile.Delete(tempFilePath);
             await botClient.SendTextMessageAsync(chatId, $"Photos saved successfully!\nUrl: {YandexDiskUrl}");
@@ -45,16 +46,17 @@ public class SaveImageCommand
         return Path.Combine(Environment.CurrentDirectory, $"{fileName}.jpg");
     }
 
-    private static async Task SaveImageToDb(TelegramMessage message, string pathToFile)
+    private static async Task SavePhotoToDb(TelegramMessage message, string pathToFile)
     {
-        await using var dbContext = new GeneralTelegramBotDbContext();
-        var dbRepository = new DbRepository(dbContext);
+        var user = new User
+        {
+            UserName = message.From.FirstName,
+            UserSurname = message.From.LastName,
+            UserLogin = message.From.Username
+        };
 
-        var userFirstName = message.From.FirstName;
-        var userLastName = message.From.LastName;
-        var userName = message.From.Username;
-
-        var user = dbRepository.CreateUser(userFirstName, userLastName, userName).Result;
+        unitOfWork.UserRepository.InsertUser(user);
+        unitOfWork.Save();
         var byteArray = await SystemFile.ReadAllBytesAsync(pathToFile);
         var photo = new Photo
         {
@@ -63,7 +65,9 @@ public class SaveImageCommand
             PhotoCreationDate = DateTime.Now,
             UserId = user.UserId
         };
-        await dbContext.AddAsync(photo);
-        await dbContext.SaveChangesAsync();
+
+        unitOfWork.PhotoRepository.InsertPhoto(photo);
+        unitOfWork.Save();
+        unitOfWork.Dispose();
     }
 }

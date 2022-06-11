@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GeneralTelegramBot.DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace GeneralTelegramBot.DataAccess.Models
+namespace GeneralTelegramBot.DataAccess.Data
 {
     public partial class GeneralTelegramBotDbContext : DbContext
     {

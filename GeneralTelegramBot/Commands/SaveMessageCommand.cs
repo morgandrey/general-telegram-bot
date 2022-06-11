@@ -7,6 +7,7 @@ namespace GeneralTelegramBot.Commands;
 
 public class SaveMessageCommand
 {
+    private static readonly UnitOfWork unitOfWork = new UnitOfWork();
     public static async Task Execute(ITelegramBotClient botClient, TelegramMessage telegramMessage)
     {
         await SaveMessageToDb(botClient, telegramMessage);
@@ -15,28 +16,38 @@ public class SaveMessageCommand
     private static async Task SaveMessageToDb(ITelegramBotClient botClient, TelegramMessage telegramMessage)
     {
         var chatId = telegramMessage.Chat.Id;
-        await using var dbContext = new GeneralTelegramBotDbContext();
-        var dbRepository = new DbRepository(dbContext);
 
-        var saveUserFirstName = telegramMessage.From.FirstName;
-        var saveUserLastName = telegramMessage.From.LastName;
-        var saveUserUserName = telegramMessage.From.Username;
+        var saveMessageUser = new User
+        {
+            UserName = telegramMessage.From.FirstName,
+            UserSurname = telegramMessage.From.LastName,
+            UserLogin = telegramMessage.From.Username
+        };
 
-        var saveUserId = dbRepository.CreateUser(saveUserFirstName, saveUserLastName, saveUserUserName);
+        unitOfWork.UserRepository.InsertUser(saveMessageUser);
+        unitOfWork.Save();
 
-        var messageUserFirstName = telegramMessage.ReplyToMessage.From.FirstName;
-        var messageUserLastName = telegramMessage.ReplyToMessage.From.LastName;
-        var messageUserUserName = telegramMessage.ReplyToMessage.From.Username;
+        var messageUser = new User
+        {
+            UserName = telegramMessage.ReplyToMessage.From.FirstName,
+            UserSurname = telegramMessage.ReplyToMessage.From.LastName,
+            UserLogin = telegramMessage.ReplyToMessage.From.Username
+        };
 
-        var messageUserId = dbRepository.CreateUser(messageUserFirstName, messageUserLastName, messageUserUserName).Result;
+        unitOfWork.UserRepository.InsertUser(messageUser);
+        unitOfWork.Save();
+
         var message = new Message
         {
             MessageContent = telegramMessage.ReplyToMessage.Text,
             MessageCreationDate = DateTime.Now,
-            MessageUserId = messageUserId.UserId,
-            SaveUserId = saveUserId.Result.UserId
+            MessageUserId = messageUser.UserId,
+            SaveUserId = saveMessageUser.UserId
         };
-        dbRepository.SaveTelegramMessage(message);
+
+        unitOfWork.MessageRepository.InsertMessage(message);
+        unitOfWork.Save();
+        unitOfWork.Dispose();
         await botClient.SendTextMessageAsync(chatId, "Message saved successfully!");
     }
 }
