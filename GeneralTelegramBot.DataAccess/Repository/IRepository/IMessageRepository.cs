@@ -2,8 +2,6 @@
 
 namespace GeneralTelegramBot.DataAccess.Repository.IRepository;
 
-public interface IMessageRepository
+public interface IMessageRepository : IRepository<Message>
 {
-    Message GetMessageByUserName(string userName);
-    void InsertMessage(Message message);
 }

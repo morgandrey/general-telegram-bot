@@ -8,7 +8,7 @@ using SystemFile = System.IO.File;
 
 namespace GeneralTelegramBot.Commands;
 
-public class SaveImageCommand
+public class SavePhotoCommand
 {
     private static readonly UnitOfWork unitOfWork = new UnitOfWork();
     private const string YandexDiskUrl = "https://disk.yandex.ru/d/QUVXM648JvB5cQ";
@@ -66,7 +66,7 @@ public class SaveImageCommand
             UserId = user.UserId
         };
 
-        unitOfWork.PhotoRepository.InsertPhoto(photo);
+        unitOfWork.PhotoRepository.Add(photo);
         unitOfWork.Save();
         unitOfWork.Dispose();
     }

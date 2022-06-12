@@ -24,7 +24,7 @@ public class SaveMessageCommand
             UserLogin = telegramMessage.From.Username
         };
 
-        unitOfWork.UserRepository.InsertUser(saveMessageUser);
+        unitOfWork.UserRepository.TryAddUser(saveMessageUser);
         unitOfWork.Save();
 
         var messageUser = new User
@@ -34,7 +34,7 @@ public class SaveMessageCommand
             UserLogin = telegramMessage.ReplyToMessage.From.Username
         };
 
-        unitOfWork.UserRepository.InsertUser(messageUser);
+        unitOfWork.UserRepository.TryAddUser(messageUser);
         unitOfWork.Save();
 
         var message = new Message
@@ -45,7 +45,7 @@ public class SaveMessageCommand
             SaveUserId = saveMessageUser.UserId
         };
 
-        unitOfWork.MessageRepository.InsertMessage(message);
+        unitOfWork.MessageRepository.Add(message);
         unitOfWork.Save();
         unitOfWork.Dispose();
         await botClient.SendTextMessageAsync(chatId, "Message saved successfully!");

@@ -26,7 +26,7 @@ public static class Program
             {
                 if (message.ReplyToMessage!.Photo != null)
                 {
-                    await SaveImageCommand.Execute(botClient, message, message.ReplyToMessage.Photo[^1].FileId);
+                    await SavePhotoCommand.Execute(botClient, message, message.ReplyToMessage.Photo[^1].FileId);
                 }
                 else if (message.ReplyToMessage.Text != null)
                 {
@@ -49,7 +49,7 @@ public static class Program
             if (message.Caption!.Contains("/save"))
             {
                 IsMultiplePhotos = true;
-                await SaveImageCommand.Execute(botClient, message, message.Photo[^1].FileId);
+                await SavePhotoCommand.Execute(botClient, message, message.Photo[^1].FileId);
             }
         }
     }

@@ -4,28 +4,21 @@ using GeneralTelegramBot.DataAccess.Repository.IRepository;
 
 namespace GeneralTelegramBot.DataAccess.Repository;
 
-public class UserRepository : IUserRepository
+public class UserRepository : Repository<User>, IUserRepository
 {
     private readonly GeneralTelegramBotDbContext dbContext;
 
-    public UserRepository(GeneralTelegramBotDbContext dbContext)
+    public UserRepository(GeneralTelegramBotDbContext dbContext) : base(dbContext)
     {
         this.dbContext = dbContext;
     }
 
-    public User GetUserByUserName(string userName)
+    public void TryAddUser(User user)
     {
-        var user = dbContext.Users.FirstOrDefault(x => x.UserLogin == userName);
-        return user;
-    }
-
-    public void InsertUser(User user)
-    {
-        var userAlreadyExists = GetUserByUserName(user.UserName);
-        if (userAlreadyExists != null)
+        var userExistInDb = GetFirstOrDefault(x => x.UserName == user.UserName);
+        if (userExistInDb == null)
         {
-            return;
+            Add(user);
         }
-        dbContext.Users.Add(user);
     }
 }

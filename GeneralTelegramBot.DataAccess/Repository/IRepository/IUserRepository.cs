@@ -2,8 +2,7 @@
 
 namespace GeneralTelegramBot.DataAccess.Repository.IRepository;
 
-public interface IUserRepository
+public interface IUserRepository : IRepository<User>
 {
-    User GetUserByUserName(string userName);
-    void InsertUser(User user);
+    void TryAddUser(User user);
 }

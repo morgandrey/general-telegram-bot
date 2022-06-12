@@ -2,11 +2,7 @@
 
 namespace GeneralTelegramBot.DataAccess.Repository.IRepository;
 
-public interface IPhotoRepository
+public interface IPhotoRepository : IRepository<Photo>
 {
-    IEnumerable<Photo> GetPhotos();
-    Photo GetPhotoByUsername(string userName);
-    void InsertPhoto(Photo photo);
-    void DeletePhoto(int photoId);
     void UpdatePhoto(Photo photo);
 }

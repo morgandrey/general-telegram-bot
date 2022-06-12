@@ -4,31 +4,15 @@ using GeneralTelegramBot.DataAccess.Repository.IRepository;
 
 namespace GeneralTelegramBot.DataAccess.Repository;
 
-public class PhotoRepository : IPhotoRepository
+public class PhotoRepository : Repository<Photo>, IPhotoRepository
 {
     private readonly GeneralTelegramBotDbContext dbContext;
 
-    public PhotoRepository(GeneralTelegramBotDbContext dbContext)
+    public PhotoRepository(GeneralTelegramBotDbContext dbContext) : base(dbContext)
     {
         this.dbContext = dbContext;
     }
-
-    public IEnumerable<Photo> GetPhotos()
-    {
-        return dbContext.Photos.ToList();
-    }
-
     public Photo GetPhotoByUsername(string userName)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void InsertPhoto(Photo photo)
-    {
-        dbContext.Photos.Add(photo);
-    }
-
-    public void DeletePhoto(int photoId)
     {
         throw new NotImplementedException();
     }
@@ -36,10 +20,5 @@ public class PhotoRepository : IPhotoRepository
     public void UpdatePhoto(Photo photo)
     {
         throw new NotImplementedException();
-    }
-
-    public void Save()
-    {
-        dbContext.SaveChanges();
     }
 }
