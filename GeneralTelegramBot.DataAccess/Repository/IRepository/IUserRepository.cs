@@ -4,5 +4,5 @@ namespace GeneralTelegramBot.DataAccess.Repository.IRepository;
 
 public interface IUserRepository : IRepository<User>
 {
-    void TryAddUser(User user);
+    User TryAddUser(User user);
 }

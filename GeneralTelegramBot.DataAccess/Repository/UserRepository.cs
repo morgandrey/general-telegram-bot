@@ -13,12 +13,14 @@ public class UserRepository : Repository<User>, IUserRepository
         this.dbContext = dbContext;
     }
 
-    public void TryAddUser(User user)
+    public User TryAddUser(User user)
     {
         var userExistInDb = GetFirstOrDefault(x => x.UserName == user.UserName);
-        if (userExistInDb == null)
+        if (userExistInDb != null)
         {
-            Add(user);
+            return userExistInDb;
         }
+        Add(user);
+        return user;
     }
 }

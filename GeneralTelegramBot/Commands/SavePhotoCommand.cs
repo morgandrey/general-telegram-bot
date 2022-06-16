@@ -21,7 +21,7 @@ public class SavePhotoCommand
     public static async Task Execute(ITelegramBotClient botClient, TelegramMessage message, string image)
     {
         var chatId = message.Chat.Id;
-        var tempFilePath = CreateTempFilePath();
+        var tempFilePath = Utils.CreateTempFilePath("jpg");
         try
         {
             await using var outputFileStream = new FileStream(tempFilePath, FileMode.Create);
@@ -40,22 +40,14 @@ public class SavePhotoCommand
         }
     }
 
-    private static string CreateTempFilePath()
-    {
-        var fileName = DateTime.Now.ToString("MM-dd-yyyy;hh-mm-sstt");
-        return Path.Combine(Environment.CurrentDirectory, $"{fileName}.jpg");
-    }
-
     private static async Task SavePhotoToDb(TelegramMessage message, string pathToFile)
     {
-        var user = new User
+        var user = unitOfWork.UserRepository.TryAddUser(new User
         {
             UserName = message.From.FirstName,
             UserSurname = message.From.LastName,
             UserLogin = message.From.Username
-        };
-
-        unitOfWork.UserRepository.InsertUser(user);
+        });
         unitOfWork.Save();
         var byteArray = await SystemFile.ReadAllBytesAsync(pathToFile);
         var photo = new Photo

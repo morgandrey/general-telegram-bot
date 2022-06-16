@@ -17,24 +17,20 @@ public class SaveMessageCommand
     {
         var chatId = telegramMessage.Chat.Id;
 
-        var saveMessageUser = new User
+        var saveMessageUser = unitOfWork.UserRepository.TryAddUser(new User
         {
             UserName = telegramMessage.From.FirstName,
             UserSurname = telegramMessage.From.LastName,
             UserLogin = telegramMessage.From.Username
-        };
-
-        unitOfWork.UserRepository.TryAddUser(saveMessageUser);
+        });
         unitOfWork.Save();
 
-        var messageUser = new User
+        var messageUser = unitOfWork.UserRepository.TryAddUser(new User
         {
             UserName = telegramMessage.ReplyToMessage.From.FirstName,
             UserSurname = telegramMessage.ReplyToMessage.From.LastName,
             UserLogin = telegramMessage.ReplyToMessage.From.Username
-        };
-
-        unitOfWork.UserRepository.TryAddUser(messageUser);
+        });
         unitOfWork.Save();
 
         var message = new Message
