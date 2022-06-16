@@ -5,7 +5,7 @@ namespace GeneralTelegramBot.Commands;
 
 public static class RandomCommand
 {
-    private const string RandomImageUrl = "https://picsum.photos/800";
+    private const string RandomImageUrl = "https://thiscatdoesnotexist.com/";
 
     public static async Task Execute(ITelegramBotClient botClient, Message message)
     {
