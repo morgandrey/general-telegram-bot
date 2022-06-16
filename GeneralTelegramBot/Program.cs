@@ -1,4 +1,8 @@
-﻿using GeneralTelegramBot.Commands;
+﻿using System.Diagnostics;
+using System.Globalization;
+using System.Speech.AudioFormat;
+using System.Speech.Synthesis;
+using GeneralTelegramBot.Commands;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Extensions.Polling;
@@ -22,16 +26,24 @@ public static class Program
 
         if (IsReplyMessageUpdate(message))
         {
-            if (message.Text!.Contains("/save"))
+            switch (message.Text)
             {
-                if (message.ReplyToMessage!.Photo != null)
-                {
-                    await SavePhotoCommand.Execute(botClient, message, message.ReplyToMessage.Photo[^1].FileId);
-                }
-                else if (message.ReplyToMessage.Text != null)
-                {
-                    await SaveMessageCommand.Execute(botClient, message);
-                }
+                case "/save":
+                    if (message.ReplyToMessage!.Photo != null)
+                    {
+                        await SavePhotoCommand.Execute(botClient, message, message.ReplyToMessage.Photo[^1].FileId);
+                    }
+                    else if (message.ReplyToMessage.Text != null)
+                    {
+                        await SaveMessageCommand.Execute(botClient, message);
+                    }
+                    break;
+                case "/audio":
+                    if (message.ReplyToMessage.Text != null)
+                    {
+                        await AudioCommand.Execute(botClient, message, cancellationToken);
+                    }
+                    break;
             }
         }
         else if (message.Text != null)
