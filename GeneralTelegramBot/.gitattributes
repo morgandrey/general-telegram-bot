@@ -1,2 +1,2 @@
-.exe filter=lfs diff=lfs merge=lfs -text
 ffmpeg.exe filter=lfs diff=lfs merge=lfs -text
+FFMPEG/ffmpeg.exe filter=lfs diff=lfs merge=lfs -text
