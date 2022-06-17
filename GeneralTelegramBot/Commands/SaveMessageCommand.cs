@@ -44,6 +44,8 @@ public class SaveMessageCommand
         unitOfWork.MessageRepository.Add(message);
         unitOfWork.Save();
         unitOfWork.Dispose();
-        await botClient.SendTextMessageAsync(chatId, "Message saved successfully!");
+        await botClient.SendTextMessageAsync(chatId,
+            "Message saved successfully!",
+            cancellationToken: cancellationToken);
     }
 }

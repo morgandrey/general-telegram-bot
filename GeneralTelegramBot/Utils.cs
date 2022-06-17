@@ -23,7 +23,7 @@ public static class Utils
         {
             CreateNoWindow = false,
             UseShellExecute = false,
-            FileName = Path.Combine(Environment.CurrentDirectory, "ffmpeg.exe"),
+            FileName = Path.Combine(Environment.CurrentDirectory, "FFMPEG/ffmpeg.exe"),
             WindowStyle = ProcessWindowStyle.Hidden,
             Arguments = $"-i {inputWavFilePath} -acodec libopus {outputOggFilePath}"
         };

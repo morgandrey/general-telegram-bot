@@ -11,6 +11,7 @@ public static class AnecdoteCommand
     {
         await botClient.SendTextMessageAsync(message.Chat.Id,
             GetRandomAnecdote(),
+            disableNotification: true,
             cancellationToken: cancellationToken);
     }
 

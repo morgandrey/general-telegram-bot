@@ -6,6 +6,7 @@ namespace GeneralTelegramBot.Commands;
 public static class RandomCommand
 {
     private const string RandomImageUrl = "https://thiscatdoesnotexist.com/";
+    private const string PhotoCaption = "Random image";
 
     public static async Task Execute(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
     {
@@ -13,7 +14,8 @@ public static class RandomCommand
         using var response = await client.GetAsync(RandomImageUrl, cancellationToken);
         await botClient.SendPhotoAsync(message.Chat.Id,
             response.Content.ReadAsStream(),
-            "Random image",
+            PhotoCaption,
+            disableNotification: true,
             cancellationToken: cancellationToken);
     }
 }

@@ -13,30 +13,38 @@ public class SavePhotoCommand
     private static readonly UnitOfWork unitOfWork = new UnitOfWork();
     private const string YandexDiskUrl = "https://disk.yandex.ru/d/QUVXM648JvB5cQ";
 
-    private static async Task UploadToYandexDisk(string diskPath, string localPath)
+    private static async Task UploadToYandexDisk(string diskPath, string localPath, CancellationToken cancellationToken)
     {
-        await new DiskHttpApi(Constants.YandexDiskToken).Files.UploadFileAsync(diskPath, false, localPath, CancellationToken.None);
+        await new DiskHttpApi(Constants.YandexDiskToken).Files.UploadFileAsync(diskPath, false, localPath, cancellationToken);
     }
 
-    public static async Task Execute(ITelegramBotClient botClient, TelegramMessage message, string image)
+    public static async Task Execute(ITelegramBotClient botClient, TelegramMessage message, string image, CancellationToken cancellationToken)
     {
         var chatId = message.Chat.Id;
         var tempFilePath = Utils.CreateTempFilePath("jpg");
         try
         {
             await using var outputFileStream = new FileStream(tempFilePath, FileMode.Create);
-            await botClient.GetInfoAndDownloadFileAsync(image, outputFileStream);
+            await botClient.GetInfoAndDownloadFileAsync(image,
+                outputFileStream,
+                cancellationToken: cancellationToken);
             await outputFileStream.DisposeAsync();
 
             await SavePhotoToDb(message, tempFilePath);
-            await UploadToYandexDisk($"disk:/Фотки/{DateTime.Now:MM-dd-yyyy;hh-mm-sstt}", tempFilePath);
+            await UploadToYandexDisk($"disk:/Фотки/{DateTime.Now:MM-dd-yyyy;hh-mm-sstt}",
+                tempFilePath,
+                cancellationToken: cancellationToken);
             SystemFile.Delete(tempFilePath);
-            await botClient.SendTextMessageAsync(chatId, $"Photos saved successfully!\nUrl: {YandexDiskUrl}");
+            await botClient.SendTextMessageAsync(chatId,
+                $"Photos saved successfully!\nUrl: {YandexDiskUrl}",
+                cancellationToken: cancellationToken);
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
-            await botClient.SendTextMessageAsync(chatId, "An error occurred while saving photos!");
+            await botClient.SendTextMessageAsync(chatId,
+                "An error occurred while saving photos!",
+                cancellationToken: cancellationToken);
         }
     }
 

@@ -37,7 +37,7 @@ public class Handlers
                 case "/save":
                     if (message.ReplyToMessage!.Photo != null)
                     {
-                        await SavePhotoCommand.Execute(botClient, message, message.ReplyToMessage.Photo[^1].FileId);
+                        await SavePhotoCommand.Execute(botClient, message, message.ReplyToMessage.Photo[^1].FileId, cancellationToken);
                     }
                     else if (message.ReplyToMessage.Text != null)
                     {
@@ -67,7 +67,7 @@ public class Handlers
             if (message.Caption!.Contains("/save"))
             {
                 IsMultiplePhotos = true;
-                await SavePhotoCommand.Execute(botClient, message, message.Photo[^1].FileId);
+                await SavePhotoCommand.Execute(botClient, message, message.Photo[^1].FileId, cancellationToken);
             }
         }
     }

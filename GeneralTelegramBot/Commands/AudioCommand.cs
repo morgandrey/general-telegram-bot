@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Speech.Synthesis;
+﻿using System.Speech.Synthesis;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using File = System.IO.File;
@@ -20,6 +19,7 @@ public static class AudioCommand
             chatId: message.Chat.Id,
             voice: stream,
             duration: audioDuration,
+            disableNotification: true,
             cancellationToken: cancellationToken);
     }
 
