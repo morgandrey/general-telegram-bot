@@ -8,12 +8,12 @@ namespace GeneralTelegramBot.Commands;
 public class SaveMessageCommand
 {
     private static readonly UnitOfWork unitOfWork = new UnitOfWork();
-    public static async Task Execute(ITelegramBotClient botClient, TelegramMessage telegramMessage)
+    public static async Task Execute(ITelegramBotClient botClient, TelegramMessage telegramMessage, CancellationToken cancellationToken)
     {
-        await SaveMessageToDb(botClient, telegramMessage);
+        await SaveMessageToDb(botClient, telegramMessage, cancellationToken);
     }
 
-    private static async Task SaveMessageToDb(ITelegramBotClient botClient, TelegramMessage telegramMessage)
+    private static async Task SaveMessageToDb(ITelegramBotClient botClient, TelegramMessage telegramMessage, CancellationToken cancellationToken)
     {
         var chatId = telegramMessage.Chat.Id;
 

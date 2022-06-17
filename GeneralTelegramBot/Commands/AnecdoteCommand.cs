@@ -7,12 +7,14 @@ namespace GeneralTelegramBot.Commands;
 public static class AnecdoteCommand
 {
     private const int MaxAnecdote = 1140;
-    public static async Task Execute(ITelegramBotClient botClient, Message message)
+    public static async Task Execute(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
     {
-        await botClient.SendTextMessageAsync(message.Chat.Id, GetRandomAnecdote());
+        await botClient.SendTextMessageAsync(message.Chat.Id,
+            GetRandomAnecdote(),
+            cancellationToken: cancellationToken);
     }
 
-    private static string GetRandomAnecdote()
+    public static string GetRandomAnecdote()
     {
         var anecdoteContent = string.Empty;
         try
