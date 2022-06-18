@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 using NAudio.Wave;
 
-namespace GeneralTelegramBot;
+namespace GeneralTelegramBot.Utils;
 
-public static class Utils
+public static class GeneralUtils
 {
     public static string CreateTempFilePath(string format)
     {

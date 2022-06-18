@@ -7,8 +7,6 @@ namespace GeneralTelegramBot;
 
 public class Handlers
 {
-    private static bool IsMultiplePhotos;
-
     public static Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
     {
         var ErrorMessage = exception switch
@@ -54,21 +52,11 @@ public class Handlers
         }
         else if (message.Text != null)
         {
-            IsMultiplePhotos = false;
             await HandleTextCommand(botClient, message, cancellationToken);
         }
         else if (IsMessageUpdate(message))
         {
-            if (IsMultiplePhotos)
-            {
-                message.Caption = "/save";
-            }
-
-            if (message.Caption!.Contains("/save"))
-            {
-                IsMultiplePhotos = true;
-                await SavePhotoCommand.Execute(botClient, message, message.Photo[^1].FileId, cancellationToken);
-            }
+            await SavePhotoCommand.Execute(botClient, message, message.Photo[^1].FileId, cancellationToken);
         }
     }
 
@@ -97,7 +85,8 @@ public class Handlers
     private static bool IsMessageUpdate(Message message)
     {
         return message.Photo != null &&
-               message.Caption != null;
+               message.Caption != null &&
+               message.Caption!.Contains("/save");
     }
 
     private static bool IsReplyMessageUpdate(Message message)

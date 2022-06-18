@@ -1,5 +1,6 @@
 using GeneralTelegramBot.DataAccess.Models;
 using GeneralTelegramBot.DataAccess.Repository;
+using GeneralTelegramBot.Utils;
 using Telegram.Bot;
 using YandexDisk.Client.Clients;
 using YandexDisk.Client.Http;
@@ -21,7 +22,7 @@ public class SavePhotoCommand
     public static async Task Execute(ITelegramBotClient botClient, TelegramMessage message, string image, CancellationToken cancellationToken)
     {
         var chatId = message.Chat.Id;
-        var tempFilePath = Utils.CreateTempFilePath("jpg");
+        var tempFilePath = GeneralUtils.CreateTempFilePath("jpg");
         try
         {
             await using var outputFileStream = new FileStream(tempFilePath, FileMode.Create);
@@ -31,9 +32,9 @@ public class SavePhotoCommand
             await outputFileStream.DisposeAsync();
 
             await SavePhotoToDb(message, tempFilePath);
-            await UploadToYandexDisk($"disk:/Фотки/{DateTime.Now:MM-dd-yyyy;hh-mm-sstt}",
-                tempFilePath,
-                cancellationToken: cancellationToken);
+            //await UploadToYandexDisk($"disk:/Фотки/{DateTime.Now:MM-dd-yyyy;hh-mm-sstt}",
+            //    tempFilePath,
+            //    cancellationToken: cancellationToken);
             SystemFile.Delete(tempFilePath);
             await botClient.SendTextMessageAsync(chatId,
                 $"Photos saved successfully!\nUrl: {YandexDiskUrl}",
@@ -68,6 +69,5 @@ public class SavePhotoCommand
 
         unitOfWork.PhotoRepository.Add(photo);
         unitOfWork.Save();
-        unitOfWork.Dispose();
     }
 }
