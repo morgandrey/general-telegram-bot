@@ -27,7 +27,7 @@ namespace GeneralTelegramBot.Web.Controllers
                 var user = unitOfWork.UserRepository.GetFirstOrDefault(x => x.UserLogin == searchString);
                 if (user != null && user.Photos.Any())
                 {
-                    photoList = photoList.Where(s => s.User.UserLogin == user.UserLogin);
+                    photoList = photoList.Where(s => s.UserId == user.UserId);
                 }
             }
 
