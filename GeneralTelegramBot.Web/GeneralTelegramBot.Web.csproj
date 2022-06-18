@@ -18,4 +18,8 @@
     <ProjectReference Include="..\GeneralTelegramBot.DataAccess\GeneralTelegramBot.DataAccess.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
+
 </Project>

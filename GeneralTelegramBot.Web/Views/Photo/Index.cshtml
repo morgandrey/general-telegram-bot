@@ -1,0 +1,51 @@
+﻿@model GeneralTelegramBot.Web.ViewModels.PhotoViewModel
+@{  
+    ViewData["Title"] = "Photo gallery";  
+}  
+  
+<div class="col-12">  
+    <div class="card card-primary">  
+        <div class="card-header">  
+            <div class="card-title">  
+                PHOTO GALLERY
+            </div>  
+        </div>  
+        <div class="card-body">  
+  
+            <form asp-controller="Photo" asp-action="Index" method="get">
+                <p>
+                    Telegram user login: <input type="text" asp-for="SearchString"/>
+                    <input type="submit" value="Find"/>
+                    <input type="submit" value="All photos"/>
+                </p>
+            </form> 
+            <br />  
+            <div class="row">  
+                @if (Model.PhotoDictionary.Any())  
+                {  
+                    foreach (var photoViewModel in Model.PhotoDictionary)  
+                    {  
+                        <div class="col-sm-2">  
+                            <a href="@photoViewModel.Item1" data-toggle="lightbox" data-title="@photoViewModel.Item2.PhotoHash[..8]"> 
+                                <img src=@photoViewModel.Item1 asp-append-version="true" class="img-fluid mb-2" alt="white sample">  
+                            </a>
+                        </div>  
+                    }
+                }
+            </div>  
+        </div>  
+    </div>  
+</div>  
+  
+@section Scripts{
+    <script>
+        $(function () {  
+            $(document).on('click', '[data-toggle="lightbox"]', function (event) {  
+                event.preventDefault();  
+                $(this).ekkoLightbox({  
+                    alwaysShowClose: true  
+                });  
+            });  
+        });
+    </script>
+} 
