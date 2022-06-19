@@ -8,6 +8,7 @@ namespace GeneralTelegramBot;
 public class TelegramMessageHandler
 {
     private readonly ITelegramBotClient botClient;
+    private static bool IsMultiPhotoSave;
 
     public TelegramMessageHandler(ITelegramBotClient botClient)
     {
@@ -64,11 +65,21 @@ public class TelegramMessageHandler
             }
             else if (message.Text != null)
             {
+                IsMultiPhotoSave = false;
                 await HandleTextCommand(message, cancellationToken);
             }
             else if (IsMessageUpdate(message))
             {
-                await SavePhotoCommand.Execute(botClient, message, message.Photo[^1].FileId, cancellationToken);
+                if (IsMultiPhotoSave)
+                {
+                    message.Caption = "/save";
+                }
+
+                if (message.Caption != null && message.Caption!.Contains("/save"))
+                {
+                    IsMultiPhotoSave = true;
+                    await SavePhotoCommand.Execute(botClient, message, message.Photo[^1].FileId, cancellationToken);
+                }
             }
         }
         catch (Exception exception)
@@ -101,9 +112,7 @@ public class TelegramMessageHandler
 
     private bool IsMessageUpdate(Message message)
     {
-        return message.Photo != null &&
-               message.Caption != null &&
-               message.Caption!.Contains("/save");
+        return message.Photo != null;
     }
 
     private bool IsReplyMessageUpdate(Message message)

@@ -12,8 +12,8 @@ public static class AudioAnecdoteCommand
         var inputWavFilePath = GeneralUtils.CreateTempFilePath("wav");
         var outputOggFilePath = GeneralUtils.CreateTempFilePath("ogg");
         var randomAnecdote = AnecdoteCommand.GetRandomAnecdote();
-        AudioCommand.CreateAudioWavFile(inputWavFilePath, randomAnecdote);
-        await GeneralUtils.ExecuteFFMPEGProcess(inputWavFilePath, outputOggFilePath, cancellationToken);
+        GeneralUtils.CreateAudioWavFile(inputWavFilePath, randomAnecdote);
+        await GeneralUtils.StartFFMPEGProcess(inputWavFilePath, outputOggFilePath, cancellationToken);
         var audioDuration = GeneralUtils.GetWavFileDuration(inputWavFilePath).Seconds;
         await using var stream = File.OpenRead(outputOggFilePath);
         await botClient.SendVoiceAsync(
@@ -22,5 +22,8 @@ public static class AudioAnecdoteCommand
             duration: audioDuration,
             disableNotification: true,
             cancellationToken: cancellationToken);
+        await stream.DisposeAsync();
+        // File.Delete(inputWavFilePath);
+        File.Delete(outputOggFilePath);
     }
 }

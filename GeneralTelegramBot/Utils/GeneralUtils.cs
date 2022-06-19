@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Speech.Synthesis;
+using CliWrap;
 using NAudio.Wave;
 
 namespace GeneralTelegramBot.Utils;
@@ -17,17 +18,27 @@ public static class GeneralUtils
         return waveFileReader.TotalTime;
     }
 
-    public static async Task ExecuteFFMPEGProcess(string inputWavFilePath, string outputOggFilePath, CancellationToken cancellationToken)
+    public static void CreateAudioWavFile(string wavFilePath, string message)
     {
-        var processStartInfo = new ProcessStartInfo
-        {
-            CreateNoWindow = false,
-            UseShellExecute = false,
-            FileName = Path.Combine(Environment.CurrentDirectory, "FFMPEG/ffmpeg.exe"),
-            WindowStyle = ProcessWindowStyle.Hidden,
-            Arguments = $"-i {inputWavFilePath} -acodec libopus {outputOggFilePath}"
-        };
-        using var exeProcess = Process.Start(processStartInfo);
-        await exeProcess.WaitForExitAsync(cancellationToken);
+        using var synthesizer = new SpeechSynthesizer();
+        synthesizer.SetOutputToDefaultAudioDevice();
+        synthesizer.SetOutputToWaveFile(wavFilePath);
+        synthesizer.Speak(message);
+        synthesizer.SetOutputToNull();
+    }
+
+    public static CommandTask<CommandResult> StartFFMPEGProcess(string inputWavFilePath, string outputOggFilePath, CancellationToken cancellationToken)
+    {
+        var solutionDirectory = Directory.GetParent(Directory.GetCurrentDirectory())!.FullName;
+        var ffmpegProcess = Cli.Wrap(Path.Combine(solutionDirectory, "GeneralTelegramBot/FFMPEG/ffmpeg.exe"))
+            .WithArguments(args => args
+                .Add("-i")
+                .Add($"{inputWavFilePath}")
+                .Add("-acodec")
+                .Add("libopus")
+                .Add($"{outputOggFilePath}"))
+            .WithValidation(CommandResultValidation.None)
+            .ExecuteAsync(cancellationToken);
+        return ffmpegProcess;
     }
 }

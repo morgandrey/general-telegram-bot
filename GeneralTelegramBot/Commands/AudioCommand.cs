@@ -1,5 +1,4 @@
-﻿using System.Speech.Synthesis;
-using GeneralTelegramBot.Utils;
+﻿using GeneralTelegramBot.Utils;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using File = System.IO.File;
@@ -12,8 +11,8 @@ public static class AudioCommand
     {
         var inputWavFilePath = GeneralUtils.CreateTempFilePath("wav");
         var outputOggFilePath = GeneralUtils.CreateTempFilePath("ogg");
-        CreateAudioWavFile(inputWavFilePath, message.ReplyToMessage.Text);
-        await GeneralUtils.ExecuteFFMPEGProcess(inputWavFilePath, outputOggFilePath, cancellationToken);
+        GeneralUtils.CreateAudioWavFile(inputWavFilePath, message.ReplyToMessage.Text);
+        await GeneralUtils.StartFFMPEGProcess(inputWavFilePath, outputOggFilePath, cancellationToken);
         var audioDuration = GeneralUtils.GetWavFileDuration(inputWavFilePath).Seconds;
         await using var stream = File.OpenRead(outputOggFilePath);
         await botClient.SendVoiceAsync(
@@ -22,14 +21,8 @@ public static class AudioCommand
             duration: audioDuration,
             disableNotification: true,
             cancellationToken: cancellationToken);
-    }
-
-    public static void CreateAudioWavFile(string wavFilePath, string message)
-    {
-        using var synthesizer = new SpeechSynthesizer();
-        synthesizer.SetOutputToDefaultAudioDevice();
-        synthesizer.SetOutputToWaveFile(wavFilePath);
-        synthesizer.Speak(message);
-        synthesizer.SetOutputToNull();
+        await stream.DisposeAsync();
+        // File.Delete(inputWavFilePath);
+        File.Delete(outputOggFilePath);
     }
 }

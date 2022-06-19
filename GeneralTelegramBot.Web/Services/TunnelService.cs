@@ -72,7 +72,7 @@ namespace GeneralTelegramBot.Web.Services
 
         private CommandTask<CommandResult> StartNgrokTunnel(string localUrl, CancellationToken cancellationToken)
         {
-            var ngrokTask = Cli.Wrap("ngrok")
+            var ngrokTask = Cli.Wrap("Ngrok/ngrok.exe")
                 .WithArguments(args => args
                     .Add("http")
                     .Add("--host-header=rewrite")

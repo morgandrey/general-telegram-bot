@@ -22,9 +22,9 @@ public class SavePhotoCommand
                 outputFileStream,
                 cancellationToken: cancellationToken);
             await outputFileStream.DisposeAsync();
-
-            await SavePhotoToDb(message, tempFilePath);
+            var byteArray = await SystemFile.ReadAllBytesAsync(tempFilePath, cancellationToken);
             SystemFile.Delete(tempFilePath);
+            SavePhotoToDb(message, byteArray);
             await botClient.SendTextMessageAsync(chatId,
                 "Photos saved successfully!",
                 cancellationToken: cancellationToken);
@@ -38,8 +38,16 @@ public class SavePhotoCommand
         }
     }
 
-    private static async Task SavePhotoToDb(TelegramMessage message, string pathToFile)
+    private static void SavePhotoToDb(TelegramMessage message, byte[] byteArray)
     {
+        var photoAlreadyInDb =
+            unitOfWork.PhotoRepository.GetFirstOrDefault(x => x.PhotoSource.SequenceEqual(byteArray));
+
+        if (photoAlreadyInDb != null)
+        {
+            return;
+        }
+
         var user = unitOfWork.UserRepository.TryAddUser(new User
         {
             UserName = message.From.FirstName,
@@ -47,7 +55,6 @@ public class SavePhotoCommand
             UserLogin = message.From.Username
         });
         unitOfWork.Save();
-        var byteArray = await SystemFile.ReadAllBytesAsync(pathToFile);
         var photo = new Photo
         {
             PhotoHash = Guid.NewGuid().ToString(),
