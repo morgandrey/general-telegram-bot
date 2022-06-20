@@ -36,9 +36,7 @@ namespace GeneralTelegramBot.Web.Services
 
             await WaitForApplicationStarted();
 
-            var urls = server.Features.Get<IServerAddressesFeature>()!.Addresses;
-            
-            var localUrl = urls.Single(u => u.StartsWith("http://"));
+            var localUrl = "http://morgan93-001-site1.gtempurl.com/";
 
             logger.LogInformation("Starting ngrok tunnel for {LocalUrl}", localUrl);
             var ngrokTask = StartNgrokTunnel(localUrl, cancellationToken);
