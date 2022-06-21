@@ -1,5 +1,6 @@
 ﻿using GeneralTelegramBot.DataAccess.Models;
 using GeneralTelegramBot.DataAccess.Repository;
+using GeneralTelegramBot.DataAccess.Repository.IRepository;
 using Telegram.Bot;
 using TelegramMessage = Telegram.Bot.Types.Message;
 
@@ -7,13 +8,12 @@ namespace GeneralTelegramBot.Commands;
 
 public class SaveMessageCommand
 {
-    private static readonly UnitOfWork unitOfWork = new UnitOfWork();
-    public static async Task Execute(ITelegramBotClient botClient, TelegramMessage telegramMessage, CancellationToken cancellationToken)
+    public static async Task Execute(ITelegramBotClient botClient, TelegramMessage telegramMessage, IUnitOfWork unitOfWork, CancellationToken cancellationToken)
     {
-        await SaveMessageToDb(botClient, telegramMessage, cancellationToken);
+        await SaveMessageToDb(botClient, telegramMessage, unitOfWork, cancellationToken);
     }
 
-    private static async Task SaveMessageToDb(ITelegramBotClient botClient, TelegramMessage telegramMessage, CancellationToken cancellationToken)
+    private static async Task SaveMessageToDb(ITelegramBotClient botClient, TelegramMessage telegramMessage, IUnitOfWork unitOfWork, CancellationToken cancellationToken)
     {
         var chatId = telegramMessage.Chat.Id;
 
@@ -43,7 +43,6 @@ public class SaveMessageCommand
 
         unitOfWork.MessageRepository.Add(message);
         unitOfWork.Save();
-        unitOfWork.Dispose();
         await botClient.SendTextMessageAsync(chatId,
             "Message saved successfully!",
             cancellationToken: cancellationToken);

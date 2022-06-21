@@ -3,13 +3,15 @@ using GeneralTelegramBot.DataAccess.Repository.IRepository;
 
 namespace GeneralTelegramBot.DataAccess.Repository;
 
-public class UnitOfWork : IUnitOfWork, IDisposable
+public class UnitOfWork : IUnitOfWork
 {
-    public UnitOfWork()
+    private readonly GeneralTelegramBotDbContext dbContext;
+    public UnitOfWork(GeneralTelegramBotDbContext dbContext)
     {
-        PhotoRepository = new PhotoRepository(DbContext);
-        UserRepository = new UserRepository(DbContext);
-        MessageRepository = new MessageRepository(DbContext);
+        this.dbContext = dbContext;
+        PhotoRepository = new PhotoRepository(dbContext);
+        UserRepository = new UserRepository(dbContext);
+        MessageRepository = new MessageRepository(dbContext);
 
     }
 
@@ -19,28 +21,6 @@ public class UnitOfWork : IUnitOfWork, IDisposable
 
     public void Save()
     {
-        DbContext.SaveChanges();
-    }
-
-    public GeneralTelegramBotDbContext DbContext { get; } = new GeneralTelegramBotDbContext();
-
-    private bool disposed;
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!this.disposed)
-        {
-            if (disposing)
-            {
-                DbContext.Dispose();
-            }
-        }
-        this.disposed = true;
-    }
-
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
+        dbContext.SaveChanges();
     }
 }

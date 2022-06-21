@@ -1,5 +1,6 @@
 using GeneralTelegramBot.DataAccess.Models;
 using GeneralTelegramBot.DataAccess.Repository;
+using GeneralTelegramBot.DataAccess.Repository.IRepository;
 using GeneralTelegramBot.Utils;
 using Telegram.Bot;
 using TelegramMessage = Telegram.Bot.Types.Message;
@@ -9,9 +10,7 @@ namespace GeneralTelegramBot.Commands;
 
 public class SavePhotoCommand
 {
-    private static readonly UnitOfWork unitOfWork = new UnitOfWork();
-
-    public static async Task Execute(ITelegramBotClient botClient, TelegramMessage message, string image, CancellationToken cancellationToken)
+    public static async Task Execute(ITelegramBotClient botClient, TelegramMessage message, string image, IUnitOfWork unitOfWork, CancellationToken cancellationToken)
     {
         var chatId = message.Chat.Id;
         var tempFilePath = GeneralUtils.CreateTempFilePath("jpg");
@@ -24,7 +23,7 @@ public class SavePhotoCommand
             await outputFileStream.DisposeAsync();
             var byteArray = await SystemFile.ReadAllBytesAsync(tempFilePath, cancellationToken);
             SystemFile.Delete(tempFilePath);
-            SavePhotoToDb(message, byteArray);
+            SavePhotoToDb(message, byteArray, unitOfWork);
             await botClient.SendTextMessageAsync(chatId,
                 "Photos saved successfully!",
                 cancellationToken: cancellationToken);
@@ -38,7 +37,7 @@ public class SavePhotoCommand
         }
     }
 
-    private static void SavePhotoToDb(TelegramMessage message, byte[] byteArray)
+    private static void SavePhotoToDb(TelegramMessage message, byte[] byteArray, IUnitOfWork unitOfWork)
     {
         var photoAlreadyInDb =
             unitOfWork.PhotoRepository.GetFirstOrDefault(x => x.PhotoSource.SequenceEqual(byteArray));

@@ -1,4 +1,5 @@
 ﻿using GeneralTelegramBot.Commands;
+using GeneralTelegramBot.DataAccess.Repository.IRepository;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
@@ -8,11 +9,13 @@ namespace GeneralTelegramBot;
 public class TelegramMessageHandler
 {
     private readonly ITelegramBotClient botClient;
+    private readonly IUnitOfWork unitOfWork;
     private static bool IsMultiPhotoSave;
 
-    public TelegramMessageHandler(ITelegramBotClient botClient)
+    public TelegramMessageHandler(ITelegramBotClient botClient, IUnitOfWork unitOfWork)
     {
         this.botClient = botClient;
+        this.unitOfWork = unitOfWork;
     }
 
     public Task HandleErrorAsync(Exception exception, CancellationToken cancellationToken)
@@ -45,12 +48,16 @@ public class TelegramMessageHandler
                     case "/save":
                         if (message.ReplyToMessage!.Photo != null)
                         {
-                            await SavePhotoCommand.Execute(botClient, message, message.ReplyToMessage.Photo[^1].FileId,
+                            await SavePhotoCommand.Execute(
+                                botClient,
+                                message,
+                                message.ReplyToMessage.Photo[^1].FileId,
+                                unitOfWork,
                                 cancellationToken);
                         }
                         else if (message.ReplyToMessage.Text != null)
                         {
-                            await SaveMessageCommand.Execute(botClient, message, cancellationToken);
+                            await SaveMessageCommand.Execute(botClient, message, unitOfWork, cancellationToken);
                         }
 
                         break;
@@ -78,7 +85,12 @@ public class TelegramMessageHandler
                 if (message.Caption != null && message.Caption!.Contains("/save"))
                 {
                     IsMultiPhotoSave = true;
-                    await SavePhotoCommand.Execute(botClient, message, message.Photo[^1].FileId, cancellationToken);
+                    await SavePhotoCommand.Execute(
+                        botClient,
+                        message,
+                        message.Photo[^1].FileId,
+                        unitOfWork,
+                        cancellationToken);
                 }
             }
         }
