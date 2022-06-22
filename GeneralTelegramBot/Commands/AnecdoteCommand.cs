@@ -1,13 +1,17 @@
-﻿using HtmlAgilityPack;
+﻿using GeneralTelegramBot.Contracts;
+using HtmlAgilityPack;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
 namespace GeneralTelegramBot.Commands;
 
-public static class AnecdoteCommand
+public class AnecdoteCommand : TelegramCommand
 {
     private const int MaxAnecdote = 1140;
-    public static async Task Execute(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
+
+    public override string Name => "/anek";
+
+    public override async Task Execute(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
     {
         await botClient.SendTextMessageAsync(message.Chat.Id,
             GetRandomAnecdote(),
@@ -31,5 +35,12 @@ public static class AnecdoteCommand
             Console.WriteLine(ex.Message);
         }
         return anecdoteContent;
+    }
+
+
+    public override bool Contains(Message message)
+    {
+        return message.Text != null &&
+               message.Text.Split(' ', '@')[0].Contains(Name);
     }
 }

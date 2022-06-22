@@ -1,19 +1,23 @@
-﻿using GeneralTelegramBot.DataAccess.Models;
-using GeneralTelegramBot.DataAccess.Repository;
+﻿using GeneralTelegramBot.Contracts;
+using GeneralTelegramBot.DataAccess.Models;
 using GeneralTelegramBot.DataAccess.Repository.IRepository;
 using Telegram.Bot;
 using TelegramMessage = Telegram.Bot.Types.Message;
 
 namespace GeneralTelegramBot.Commands;
 
-public class SaveMessageCommand
+public class SaveMessageCommand : TelegramCommand
 {
-    public static async Task Execute(ITelegramBotClient botClient, TelegramMessage telegramMessage, IUnitOfWork unitOfWork, CancellationToken cancellationToken)
+    private readonly IUnitOfWork unitOfWork;
+
+    public override string Name => "/save_message";
+
+    public SaveMessageCommand(IUnitOfWork unitOfWork)
     {
-        await SaveMessageToDb(botClient, telegramMessage, unitOfWork, cancellationToken);
+        this.unitOfWork = unitOfWork;
     }
 
-    private static async Task SaveMessageToDb(ITelegramBotClient botClient, TelegramMessage telegramMessage, IUnitOfWork unitOfWork, CancellationToken cancellationToken)
+    public override async Task Execute(ITelegramBotClient botClient, TelegramMessage telegramMessage, CancellationToken cancellationToken)
     {
         var chatId = telegramMessage.Chat.Id;
 
@@ -46,5 +50,13 @@ public class SaveMessageCommand
         await botClient.SendTextMessageAsync(chatId,
             "Message saved successfully!",
             cancellationToken: cancellationToken);
+    }
+
+    public override bool Contains(TelegramMessage message)
+    {
+        return message.ReplyToMessage != null &&
+               message.Text != null &&
+               message.ReplyToMessage.Text != null &&
+               message.Text.Split(' ', '@')[0].Contains(Name);
     }
 }

@@ -1,7 +1,9 @@
 using GeneralTelegramBot;
+using GeneralTelegramBot.Contracts;
 using GeneralTelegramBot.DataAccess.Data;
 using GeneralTelegramBot.DataAccess.Repository;
 using GeneralTelegramBot.DataAccess.Repository.IRepository;
+using GeneralTelegramBot.Services;
 using GeneralTelegramBot.Web.Services;
 using Microsoft.EntityFrameworkCore;
 using Telegram.Bot;
@@ -18,8 +20,7 @@ if (builder.Environment.IsDevelopment())
     builder.Services.AddHostedService<TunnelService>();
 }
 
-builder.Services.AddScoped<TelegramMessageHandler>();
-
+builder.Services.AddScoped<ICommandService, CommandService>();
 builder.Services.AddControllersWithViews().AddNewtonsoftJson();
 builder.Services.AddDbContext<GeneralTelegramBotDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")));

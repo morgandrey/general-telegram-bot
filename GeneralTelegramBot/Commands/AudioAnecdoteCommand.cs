@@ -1,13 +1,16 @@
-﻿using GeneralTelegramBot.Utils;
+﻿using GeneralTelegramBot.Contracts;
+using GeneralTelegramBot.Utils;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using File = System.IO.File;
 
 namespace GeneralTelegramBot.Commands;
 
-public static class AudioAnecdoteCommand 
+public class AudioAnecdoteCommand : TelegramCommand
 {
-    public static async Task Execute(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
+    public override string Name => "/aanek";
+
+    public override async Task Execute(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
     {
         var inputWavFilePath = GeneralUtils.CreateTempFilePath("wav");
         var outputOggFilePath = GeneralUtils.CreateTempFilePath("ogg");
@@ -25,5 +28,11 @@ public static class AudioAnecdoteCommand
         await stream.DisposeAsync();
         // File.Delete(inputWavFilePath);
         File.Delete(outputOggFilePath);
+    }
+
+    public override bool Contains(Message message)
+    {
+        return message.Text != null &&
+               message.Text.Split(' ', '@')[0].Contains(Name);
     }
 }
