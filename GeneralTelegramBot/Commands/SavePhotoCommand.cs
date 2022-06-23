@@ -78,9 +78,8 @@ public class SavePhotoCommand : TelegramCommand
 
     public override bool Contains(TelegramMessage message)
     {
-        return (message.ReplyToMessage != null &&
-                message.Text != null &&
-                message.ReplyToMessage!.Photo != null &&
+        return (message.Text != null &&
+                message.ReplyToMessage?.Photo != null &&
                 message.Text.Split(' ', '@')[0].Contains(Name)) || 
                (message.Caption != null &&
                 message.Photo != null &&

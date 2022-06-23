@@ -10,7 +10,7 @@ public class SaveMessageCommand : TelegramCommand
 {
     private readonly IUnitOfWork unitOfWork;
 
-    public override string Name => "/save_message";
+    public override string Name => "/savem";
 
     public SaveMessageCommand(IUnitOfWork unitOfWork)
     {
@@ -54,9 +54,8 @@ public class SaveMessageCommand : TelegramCommand
 
     public override bool Contains(TelegramMessage message)
     {
-        return message.ReplyToMessage != null &&
-               message.Text != null &&
-               message.ReplyToMessage.Text != null &&
+        return message.Text != null &&
+               message.ReplyToMessage?.Text != null &&
                message.Text.Split(' ', '@')[0].Contains(Name);
     }
 }

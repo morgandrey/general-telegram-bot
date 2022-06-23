@@ -31,9 +31,8 @@ public class AudioCommand : TelegramCommand
 
     public override bool Contains(Message message)
     {
-        return message.ReplyToMessage != null &&
-               message.Text != null &&
-               message.ReplyToMessage.Text != null &&
+        return message.Text != null &&
+               message.ReplyToMessage?.Text != null &&
                message.Text.Split(' ', '@')[0].Contains(Name);
     }
 }
