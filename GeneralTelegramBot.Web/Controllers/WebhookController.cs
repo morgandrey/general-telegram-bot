@@ -21,7 +21,7 @@ public class WebhookController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] Update update, CancellationToken cancellationToken)
     {
-        if (update == null)
+        if (update?.Message == null)
         {
             return Ok();
         }
