@@ -5,7 +5,7 @@ using Moq;
 using Telegram.Bot.Types;
 using TelegramMessage = Telegram.Bot.Types.Message;
 
-namespace GeneralTelegramBot.UnitTests
+namespace GeneralTelegramBot.UnitTests.Commands
 {
     [TestClass]
     public class SavePhotoCommandUnitTests
@@ -33,7 +33,7 @@ namespace GeneralTelegramBot.UnitTests
         public void ExecuteContains_ShouldReturnTrue_WhenReplySavePhoto()
         {
             // Arrange
-            var telegramMessage = CreaterReplyTelegramMessage();
+            var telegramMessage = CreateReplyTelegramMessage();
 
             var savePhotoCommand = new SavePhotoCommand(unitOfWork.Object);
 
@@ -49,7 +49,7 @@ namespace GeneralTelegramBot.UnitTests
             return new TelegramMessage
             {
                 Caption = commandName,
-                Photo = new PhotoSize[]
+                Photo = new[]
                 {
                     new PhotoSize
                     {
@@ -59,14 +59,14 @@ namespace GeneralTelegramBot.UnitTests
             };
         }
 
-        private TelegramMessage CreaterReplyTelegramMessage()
+        private TelegramMessage CreateReplyTelegramMessage()
         {
             return new TelegramMessage
             {
                 Text = commandName,
                 ReplyToMessage = new TelegramMessage
                 {
-                    Photo = new PhotoSize[]
+                    Photo = new[]
                     {
                         new PhotoSize
                         {

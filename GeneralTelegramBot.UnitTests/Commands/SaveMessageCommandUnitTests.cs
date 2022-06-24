@@ -18,7 +18,7 @@ namespace GeneralTelegramBot.UnitTests.Commands
         public void ExecuteContains_ShouldReturnTrue_WhenSaveMessage()
         {
             // Arrange
-            var telegramMessage = CreaterReplyTelegramMessage();
+            var telegramMessage = CreateReplyTelegramMessage();
 
             var saveMessageCommand = new SaveMessageCommand(unitOfWork.Object);
 
@@ -29,7 +29,7 @@ namespace GeneralTelegramBot.UnitTests.Commands
             Assert.IsTrue(result);
         }
 
-        private TelegramMessage CreaterReplyTelegramMessage()
+        private TelegramMessage CreateReplyTelegramMessage()
         {
             return new TelegramMessage
             {

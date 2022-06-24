@@ -26,7 +26,7 @@ public class AudioAnecdoteCommand : TelegramCommand
             disableNotification: true,
             cancellationToken: cancellationToken);
         await stream.DisposeAsync();
-        // File.Delete(inputWavFilePath);
+        File.Delete(inputWavFilePath);
         File.Delete(outputOggFilePath);
     }
 

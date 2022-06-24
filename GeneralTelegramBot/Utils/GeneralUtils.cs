@@ -14,7 +14,7 @@ public static class GeneralUtils
 
     public static TimeSpan GetWavFileDuration(string fileName)
     {
-        var waveFileReader = new WaveFileReader(fileName);
+        using var waveFileReader = new WaveFileReader(fileName);
         return waveFileReader.TotalTime;
     }
 
