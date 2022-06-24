@@ -1,0 +1,51 @@
+﻿@model GeneralTelegramBot.Web.ViewModels.MessageViewModel
+@{
+    ViewData["Title"] = "Messages";
+}
+
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Messages</h2>
+        </div>
+        <form asp-controller="Message" asp-action="Index" method="get">
+            <p class="text-primary">
+                Telegram user login <input type="text" asp-for="SearchString"/>
+                <input type="submit" value="Find"/>
+            </p>
+        </form> 
+    </div>
+    <br/><br/>
+
+    <table class="table table-bordered table-striped" style="width:100%">
+        <thead>
+        <tr>
+            <th>
+                Creation date
+            </th>
+            <th>
+                Message content
+            </th>
+            <th>
+                Message user login
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var message in Model.Messages)
+        {
+            <tr>
+                <td>
+                    @message.MessageCreationDate
+                </td>
+                <td>
+                    @message.MessageContent
+                </td>
+                <td>
+                    @message.MessageUser.UserLogin
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

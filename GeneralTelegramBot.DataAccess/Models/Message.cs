@@ -12,5 +12,6 @@ namespace GeneralTelegramBot.DataAccess.Models
         public int SaveUserId { get; set; }
 
         public virtual User MessageUser { get; set; } = null!;
+        public virtual User SaveUser { get; set; } = null!;
     }
 }

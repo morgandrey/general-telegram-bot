@@ -1,10 +1,17 @@
-﻿using GeneralTelegramBot.DataAccess.Models;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using GeneralTelegramBot.DataAccess.Models;
 
 namespace GeneralTelegramBot.DataAccess.Data
 {
     public partial class GeneralTelegramBotDbContext : DbContext
     {
+        public GeneralTelegramBotDbContext()
+        {
+        }
+
         public GeneralTelegramBotDbContext(DbContextOptions<GeneralTelegramBotDbContext> options)
             : base(options)
         {
@@ -16,6 +23,11 @@ namespace GeneralTelegramBot.DataAccess.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Server=.;Database=GeneralTelegramBotDb;Trusted_Connection=True;");
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -40,9 +52,15 @@ namespace GeneralTelegramBot.DataAccess.Data
                 entity.Property(e => e.SaveUserId).HasColumnName("save_user_id");
 
                 entity.HasOne(d => d.MessageUser)
-                    .WithMany(p => p.Messages)
+                    .WithMany(p => p.MessageMessageUsers)
                     .HasForeignKey(d => d.MessageUserId)
                     .HasConstraintName("Message_User_user_id_fk");
+
+                entity.HasOne(d => d.SaveUser)
+                    .WithMany(p => p.MessageSaveUsers)
+                    .HasForeignKey(d => d.SaveUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Message_User_user_id_fk_2");
             });
 
             modelBuilder.Entity<Photo>(entity =>

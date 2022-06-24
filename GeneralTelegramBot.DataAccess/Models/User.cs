@@ -7,7 +7,8 @@ namespace GeneralTelegramBot.DataAccess.Models
     {
         public User()
         {
-            Messages = new HashSet<Message>();
+            MessageMessageUsers = new HashSet<Message>();
+            MessageSaveUsers = new HashSet<Message>();
             Photos = new HashSet<Photo>();
         }
 
@@ -16,7 +17,8 @@ namespace GeneralTelegramBot.DataAccess.Models
         public string? UserSurname { get; set; }
         public string UserLogin { get; set; } = null!;
 
-        public virtual ICollection<Message> Messages { get; set; }
+        public virtual ICollection<Message> MessageMessageUsers { get; set; }
+        public virtual ICollection<Message> MessageSaveUsers { get; set; }
         public virtual ICollection<Photo> Photos { get; set; }
     }
 }
