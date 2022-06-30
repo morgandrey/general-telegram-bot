@@ -2,8 +2,6 @@
 using GeneralTelegramBot.DataAccess.Repository.IRepository;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
-using System.Linq;
 using TelegramMessage = Telegram.Bot.Types.Message;
 
 namespace GeneralTelegramBot.UnitTests.Commands

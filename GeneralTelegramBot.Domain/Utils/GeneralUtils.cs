@@ -30,7 +30,7 @@ public static class GeneralUtils
     public static CommandTask<CommandResult> StartFFMPEGProcess(string inputWavFilePath, string outputOggFilePath, CancellationToken cancellationToken)
     {
         var solutionDirectory = Directory.GetParent(Directory.GetCurrentDirectory())!.FullName;
-        var ffmpegProcess = Cli.Wrap(Path.Combine(solutionDirectory, "GeneralTelegramBot/FFMPEG/ffmpeg.exe"))
+        var ffmpegProcess = Cli.Wrap(Path.Combine(solutionDirectory, "GeneralTelegramBot.Domain/FFMPEG/ffmpeg.exe"))
             .WithArguments(args => args
                 .Add("-i")
                 .Add($"{inputWavFilePath}")

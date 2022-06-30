@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32414.318
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeneralTelegramBot", "GeneralTelegramBot\GeneralTelegramBot.csproj", "{B3B74582-5E7C-4CD9-8983-058E5E46B461}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeneralTelegramBot.Domain", "GeneralTelegramBot.Domain\GeneralTelegramBot.Domain.csproj", "{B3B74582-5E7C-4CD9-8983-058E5E46B461}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeneralTelegramBot.DataAccess", "GeneralTelegramBot.DataAccess\GeneralTelegramBot.DataAccess.csproj", "{A41F1692-2E2F-4B21-8149-6163853191D2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeneralTelegramBot.Web", "GeneralTelegramBot.Web\GeneralTelegramBot.Web.csproj", "{724FE804-36E7-4978-A2C9-7BBBAAD50664}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneralTelegramBot.UnitTests", "GeneralTelegramBot.UnitTests\GeneralTelegramBot.UnitTests.csproj", "{EF29C739-31EF-4F9F-8EDE-BC59B4AE0AA0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneralTelegramBot.Domain.UnitTests", "GeneralTelegramBot.Domain.UnitTests\GeneralTelegramBot.Domain.UnitTests.csproj", "{EF29C739-31EF-4F9F-8EDE-BC59B4AE0AA0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneralTelegramBot.Web.UnitTests", "GeneralTelegramBot.Web.UnitTests\GeneralTelegramBot.Web.UnitTests.csproj", "{E4FF5C5C-CAE4-4F90-A56E-0BC10095507B}"
 EndProject

@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GeneralTelegramBot.DataAccess\GeneralTelegramBot.DataAccess.csproj" />
-    <ProjectReference Include="..\GeneralTelegramBot\GeneralTelegramBot.csproj" />
+    <ProjectReference Include="..\GeneralTelegramBot.Domain\GeneralTelegramBot.Domain.csproj" />
   </ItemGroup>
 
 </Project>
