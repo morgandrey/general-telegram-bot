@@ -1,16 +1,16 @@
 ﻿@model GeneralTelegramBot.Web.ViewModels.MessageViewModel
 @{
-    ViewData["Title"] = "Messages";
+    ViewData["Title"] = "Saved messages";
 }
 
 <div class="container p-3">
     <div class="row pt-4">
         <div class="col-6">
-            <h2 class="text-primary">Messages</h2>
+            <h2 class="text-primary">Saved messages</h2>
         </div>
         <form asp-controller="Message" asp-action="Index" method="get">
             <p class="text-primary">
-                Telegram user login <input type="text" asp-for="SearchString"/>
+                Telegram login <input type="text" asp-for="SearchString"/>
                 <input type="submit" value="Find"/>
             </p>
         </form> 
@@ -21,13 +21,13 @@
         <thead>
         <tr>
             <th>
-                Creation date
+                User sender
             </th>
             <th>
                 Message content
             </th>
             <th>
-                Message user login
+                Creation date
             </th>
         </tr>
         </thead>
@@ -36,13 +36,13 @@
         {
             <tr>
                 <td>
-                    @message.MessageCreationDate
+                    @message.MessageUser.UserLogin
                 </td>
                 <td>
                     @message.MessageContent
                 </td>
                 <td>
-                    @message.MessageUser.UserLogin
+                    @message.MessageCreationDate
                 </td>
             </tr>
         }

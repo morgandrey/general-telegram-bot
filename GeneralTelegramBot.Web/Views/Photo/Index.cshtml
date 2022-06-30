@@ -7,14 +7,14 @@
     <div class="card card-primary">  
         <div class="card-header">  
             <div class="card-title">  
-                PHOTO GALLERY
+                Photo gallery
             </div>  
         </div>  
         <div class="card-body">  
   
             <form asp-controller="Photo" asp-action="Index" method="get">
-                <p>
-                    Telegram user login <input type="text" asp-for="SearchString"/>
+                <p class="text-primary">
+                    Telegram login <input type="text" asp-for="SearchString"/>
                     <input type="submit" value="Find"/>
                     <input type="submit" value="All photos"/>
                 </p>

@@ -18,19 +18,19 @@ public class MessageController : Controller
     [HttpGet]
     public IActionResult Index(string searchString)
     {
-        var messages = _unitOfWork.MessageRepository.GetAll(includeProperties: "MessageUser");
+        var messages = _unitOfWork.MessageRepository.GetAll(includeProperties: "MessageUser").ToList();
         
         _logger.LogInformation("Messages are loaded successfully!");
 
         if (!string.IsNullOrEmpty(searchString))
         {
             var user = _unitOfWork.UserRepository.GetFirstOrDefault(x => x.UserLogin == searchString);
-            if (user != null && user.MessageSaveUsers.Any())
+            if (user != null)
             {
-                messages = messages.Where(s => s.SaveUserId == user.UserId);
+                messages = messages.Where(s => s.SaveUserId == user.UserId).ToList();
             }
         }
-        
+
         var messageViewModel = new MessageViewModel
         {
             Messages = messages

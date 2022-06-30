@@ -20,15 +20,15 @@ namespace GeneralTelegramBot.Web.Controllers
         public IActionResult Index(string searchString)
         {
             var photoViewModel = new PhotoViewModel();
-            var photoList = _unitOfWork.PhotoRepository.GetAll();
+            var photoList = _unitOfWork.PhotoRepository.GetAll( includeProperties: "User").ToList();
             _logger.LogInformation("Photos are loaded successfully!");
 
             if (!string.IsNullOrEmpty(searchString))
             {
                 var user = _unitOfWork.UserRepository.GetFirstOrDefault(x => x.UserLogin == searchString);
-                if (user != null && user.Photos.Any())
+                if (user != null)
                 {
-                    photoList = photoList.Where(s => s.UserId == user.UserId);
+                    photoList = photoList.Where(photo => photo.UserId == user.UserId).ToList();
                 }
             }
 
