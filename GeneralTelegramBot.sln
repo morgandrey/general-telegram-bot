@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneralTelegramBot.Domain.U
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneralTelegramBot.Web.UnitTests", "GeneralTelegramBot.Web.UnitTests\GeneralTelegramBot.Web.UnitTests.csproj", "{E4FF5C5C-CAE4-4F90-A56E-0BC10095507B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C510F7FF-52E0-4A84-AA3B-244B4E9702B4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{CBEDED5F-34BD-4A9C-BB8D-143BED7782E4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,5 +49,12 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6D4F3D41-5102-4AC8-B26A-9C11AB82DA4E}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E4FF5C5C-CAE4-4F90-A56E-0BC10095507B} = {CBEDED5F-34BD-4A9C-BB8D-143BED7782E4}
+		{EF29C739-31EF-4F9F-8EDE-BC59B4AE0AA0} = {CBEDED5F-34BD-4A9C-BB8D-143BED7782E4}
+		{A41F1692-2E2F-4B21-8149-6163853191D2} = {C510F7FF-52E0-4A84-AA3B-244B4E9702B4}
+		{B3B74582-5E7C-4CD9-8983-058E5E46B461} = {C510F7FF-52E0-4A84-AA3B-244B4E9702B4}
+		{724FE804-36E7-4978-A2C9-7BBBAAD50664} = {C510F7FF-52E0-4A84-AA3B-244B4E9702B4}
 	EndGlobalSection
 EndGlobal
