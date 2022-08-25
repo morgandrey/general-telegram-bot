@@ -1,3 +1,4 @@
+using FluentAssertions;
 using GeneralTelegramBot.Commands;
 using GeneralTelegramBot.DataAccess.Repository.IRepository;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -26,7 +27,7 @@ namespace GeneralTelegramBot.UnitTests.Commands
             var result = savePhotoCommand.Contains(telegramMessage);
 
             // Assert
-            Assert.IsTrue(result);
+            result.Should().BeTrue();
         }
 
         [TestMethod]
@@ -41,7 +42,7 @@ namespace GeneralTelegramBot.UnitTests.Commands
             var result = savePhotoCommand.Contains(telegramMessage);
 
             // Assert
-            Assert.IsTrue(result);
+            result.Should().BeTrue();
         }
 
         private TelegramMessage CreateTelegramMessage()

@@ -1,4 +1,5 @@
-﻿using GeneralTelegramBot.Commands;
+﻿using FluentAssertions;
+using GeneralTelegramBot.Commands;
 using GeneralTelegramBot.DataAccess.Repository.IRepository;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -24,7 +25,7 @@ namespace GeneralTelegramBot.UnitTests.Commands
             var result = saveMessageCommand.Contains(telegramMessage);
 
             // Assert
-            Assert.IsTrue(result);
+            result.Should().BeTrue();
         }
 
         private TelegramMessage CreateReplyTelegramMessage()
